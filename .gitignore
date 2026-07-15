@@ -1,0 +1,23 @@
+# Зависимости (библиотеки)
+node_modules/
+**/node_modules/
+
+# Локальные секреты и конфиги (КРИТИЧЕСКИ ВАЖНО!)
+.env
+.env*.local
+**/.env
+**/.env*.local
+
+# Кэш и сборка Next.js (фронтенд)
+.next/
+out/
+
+# Сборка бэкенда (если будет)
+dist/
+build/
+
+# Системные файлы и логи
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
