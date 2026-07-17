@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlmodel import Session
 from database import get_session
 from repositories.todo_repo import TodoRepository
@@ -10,6 +10,11 @@ app = FastAPI()
 @app.post("/todos", response_model=TodoRead)
 def create_todo(todo_in: TodoCreate, session: Session = Depends(get_session)):
     repo = TodoRepository(session)
+
+    # check same title
+    if repo.exists_by_title(todo_in.title):
+        raise HTTPException(status_code=400, detail="This task already exists")
+
     # todo_in.model_dump() simplify obj pydantic -> dictionary
     return repo.create(todo_in.model_dump())
 

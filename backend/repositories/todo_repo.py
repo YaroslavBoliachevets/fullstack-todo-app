@@ -8,6 +8,13 @@ class TodoRepository:
     def __init__(self, session: Session):
         self.session = session
 
+    def exists_by_title(self, title: str) -> bool:
+        # looking for todo with the same title  // query to sql
+        statment = select(Todo).where(Todo.title == title)
+        result = self.session.exec(statment).first()
+        # true/false
+        return result is not None
+
     def get_all(self, offset: int = 0, limit: int = 50):
         return self.session.exec(select(Todo).offset(offset).limit(limit)).all()
 
