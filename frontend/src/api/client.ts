@@ -1,4 +1,4 @@
-const BASE_URL = '/api';
+const BASE_URL = 'http://localhost:5000/api';
 
 export const api = {
   get: async (url: string) => {

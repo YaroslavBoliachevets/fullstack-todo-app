@@ -21,3 +21,9 @@ build/
 Thumbs.db
 *.log
 .vscode/
+
+__pycache__/
+*.pyc
+.env
+venv/
+.alembic
