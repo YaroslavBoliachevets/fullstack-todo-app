@@ -17,7 +17,7 @@ def init_db():
 
 
 def get_session():
-    # open session
+    # open session create connection to db
     with Session(engine) as session:
         # function on pause, send session to route, route is working with db/ after - close session
         yield session
