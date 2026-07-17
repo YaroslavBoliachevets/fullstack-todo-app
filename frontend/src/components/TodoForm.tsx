@@ -16,10 +16,6 @@ export const TodoForm = () => {
       setTitle('');
       toast.success('Task added successfully');
     },
-    onError: (error: unknown) => {
-      console.error('failed to add todo:', error);
-      toast.error('Failed to add task. Please try again.');
-    },
   });
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
