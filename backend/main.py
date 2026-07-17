@@ -3,8 +3,17 @@ from sqlmodel import Session
 from database import get_session
 from repositories.todo_repo import TodoRepository
 from schemas.todo import TodoCreate, TodoRead
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Адрес твоего фронтенда
+    allow_credentials=True,
+    allow_methods=["*"],  # Разрешить все методы (GET, POST, DELETE и т.д.)
+    allow_headers=["*"],  # Разрешить все заголовки
+)
 
 
 @app.post("/todos", response_model=TodoRead)
