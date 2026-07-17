@@ -9,7 +9,7 @@ class TodoRepository:
         self.session = session
 
     def exists_by_title(self, title: str) -> bool:
-        # looking for todo with the same title  // query to sql
+        # looking for todo with the same title  // STATMENT = SQL QUERY
         statment = select(Todo).where(Todo.title == title)
         result = self.session.exec(statment).first()
         # true/false
@@ -25,3 +25,11 @@ class TodoRepository:
         self.session.commit()
         self.session.refresh(todo)
         return todo
+
+    def delete(self, todo_id: int) -> bool:
+        todo = self.session.get(Todo, todo_id)
+        if not todo:
+            return False
+        self.session.delete(todo)
+        self.session.commit()
+        return True

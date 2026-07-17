@@ -35,3 +35,15 @@ def get_todos(
 ):
     repo = TodoRepository(session)
     return repo.get_all(offset=offset, limit=limit)
+
+
+@app.delete("/todos/{todo_id}")
+def del_todos(todo_id: int, session: Session = Depends(get_session)):
+    repo = TodoRepository(session)
+    # return repo.delete(todo_id)
+
+    # if false than
+    if not repo.delete(todo_id):
+        raise HTTPException(status_code=404, detail="Task has not found")
+
+    return {"message": "Task deleted"}
