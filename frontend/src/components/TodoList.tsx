@@ -1,42 +1,30 @@
 'use client';
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/api/client';
-import { toast } from 'sonner';
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-  priority: number;
-}
+import { useTodos } from '@/hooks/useTodos';
+import { useSearchParams } from 'next/navigation';
+import { FilterStatus } from '@/hooks/useTodos';
 
 export const TodoList = () => {
-  const queryClient = useQueryClient();
-  const {
-    data: todos = [],
-    isLoading,
-    isError,
-  } = useQuery<Todo[]>({ queryKey: ['todos'], queryFn: () => api.get<Todo[]>('/todos') });
+  const searchParams = useSearchParams();
+  const filter = (searchParams.get('status') as FilterStatus) || 'all';
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => api.delete(`/todos/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-      toast.success('Task deleted successfully');
-    },
-  });
+  const { todos, isLoading, isError, error, deleteTodo, isDeleting } = useTodos(filter);
+
+  if (isLoading) return <div>Task list loading...</div>;
+  if (isError) return <div>Error: {error instanceof Error ? error.message : 'Loading error'}</div>;
 
   return (
     <div>
       <h3>list</h3>
-      <ul>
+      <ul className="grid gap-2">
         {todos.map((todo) => {
           return (
-            <li key={todo.id}>
+            <li key={todo.id} className="border-2 gap-2">
+              {todo.completed ? <p>completed</p> : <p>in process</p>}
               <p>{todo.title}</p>
+              <p>{todo.priority}</p>
               <button
-                onClick={() => deleteMutation.mutate(todo.id)}
+                onClick={() => deleteTodo(todo.id)}
                 className="cursor-pointer p-3 bg-yellow-400"
               >
                 delete
