@@ -15,8 +15,16 @@ class TodoRepository:
         # true/false
         return result is not None
 
-    def get_all(self, offset: int = 0, limit: int = 50):
-        return self.session.exec(select(Todo).offset(offset).limit(limit)).all()
+    def get_all(self, offset: int = 0, limit: int = 50, status: str | None = None):
+        query = select(Todo)
+
+        if status:
+            # transfer status str -> bool
+            is_completed = status == "done"
+            query = query.where(Todo.completed == is_completed)
+
+        query = query.offset(offset).limit(limit)
+        return self.session.exec(query).all()
 
     def create(self, todo_data: dict):
         # **todo_data unbox dict to view as title="werty", priority=1
