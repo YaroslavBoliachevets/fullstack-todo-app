@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/client';
 import { toast } from 'sonner';
+import { useSearchParams } from 'next/navigation';
 
 export interface Todo {
   id: number;
@@ -9,19 +10,31 @@ export interface Todo {
   priority: number;
 }
 
-export type FilterStatus = 'all' | 'done' | 'undone';
+type FilterStatus = 'all' | 'done' | 'undone';
+type FilterSortBy = 'priority' | 'created_at';
+type FilterOrder = 'asc' | 'desc';
 
-export function useTodos(filter: FilterStatus) {
+export function useTodos() {
+  const searchParams = useSearchParams();
+
+  const filterStatus = (searchParams.get('status') as FilterStatus) || 'all';
+  const filterSortBy = (searchParams.get('sort_by') as FilterSortBy) || 'priority';
+  const filterOrder = (searchParams.get('order') as FilterOrder) || 'asc';
+
   // for invalidate data
   const queryClient = useQueryClient();
 
   const buildUrl = () => {
-    if (filter === 'all') return '/todos';
-    return `/todos?status=${filter}`;
+    const params = new URLSearchParams();
+
+    if (filterStatus !== 'all') params.set('status', filterStatus);
+    params.set('sort_by', filterSortBy);
+    params.set('order', filterOrder);
+    return `/todos?${params.toString()}`;
   };
 
   const todosQuery = useQuery<Todo[]>({
-    queryKey: ['todos', filter],
+    queryKey: ['todos', filterStatus, filterSortBy, filterOrder],
     queryFn: () => api.get<Todo[]>(buildUrl()),
   });
 

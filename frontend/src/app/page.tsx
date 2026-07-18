@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { TodoForm } from '@/components/TodoForm';
 import { TodoList } from '@/components/TodoList';
 import { Filter } from '@/components/Filter';
+import { Sort } from '@/components/Sort';
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <Suspense fallback={<div>Loading navigation...</div>}>
         <TodoForm />
         <Filter />
+        <Sort />
         <TodoList />
       </Suspense>
     </>
