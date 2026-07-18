@@ -1,14 +1,9 @@
 'use client';
 
 import { useTodos } from '@/hooks/useTodos';
-import { useSearchParams } from 'next/navigation';
-import { FilterStatus } from '@/hooks/useTodos';
 
 export const TodoList = () => {
-  const searchParams = useSearchParams();
-  const filter = (searchParams.get('status') as FilterStatus) || 'all';
-
-  const { todos, isLoading, isError, error, deleteTodo, isDeleting } = useTodos(filter);
+  const { todos, isLoading, isError, error, deleteTodo, isDeleting } = useTodos();
 
   if (isLoading) return <div>Task list loading...</div>;
   if (isError) return <div>Error: {error instanceof Error ? error.message : 'Loading error'}</div>;
