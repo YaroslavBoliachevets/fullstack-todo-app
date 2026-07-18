@@ -26,6 +26,18 @@ class TodoRepository:
         self.session.refresh(todo)
         return todo
 
+    def update(self, todo_id: int, todo_data: dict):
+        todo = self.session.get(Todo, todo_id)
+        if not todo:
+            return None
+
+        for key, value in todo_data.items():
+            setattr(todo, key, value)
+
+        self.session.commit()
+        self.session.refresh(todo)
+        return todo
+
     def delete(self, todo_id: int) -> bool:
         todo = self.session.get(Todo, todo_id)
         if not todo:

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlmodel import Session
 from database import get_session
 from repositories.todo_repo import TodoRepository
-from schemas.todo import TodoCreate, TodoRead
+from schemas.todo import TodoCreate, TodoRead, TodoUpdate
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -47,3 +47,21 @@ def del_todos(todo_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Task has not found")
 
     return {"message": "Task deleted"}
+
+
+@app.patch("/todos/{todo_id}")
+def update_todo(
+    todo_id: int, todo_data: TodoUpdate, session: Session = Depends(get_session)
+):
+    repo = TodoRepository(session)
+
+    # exclude None in query  / leave only sended data
+    payload = todo_data.model_dump(exclude_unset=True)
+    if not payload:
+        raise HTTPException(status_code=400, detail="No data provided for update")
+
+    update_todo = repo.update(todo_id, payload)
+    if not update_todo:
+        raise HTTPException(status_code=404, detail="Task has not found")
+
+    return update_todo

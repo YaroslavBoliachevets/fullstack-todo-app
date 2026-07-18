@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from typing import Optional
 
 
 # models only for validation data in/out
@@ -10,3 +11,9 @@ class TodoCreate(BaseModel):
 class TodoRead(TodoCreate):
     id: int
     completed: bool
+
+
+class TodoUpdate(BaseModel):
+    title: Optional[str] = None
+    priority: Optional[int] = None
+    completed: Optional[bool] = None
