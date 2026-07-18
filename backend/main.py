@@ -36,10 +36,14 @@ def get_todos(
     limit: int = 50,
     # /todos?status=done / optional
     status: Optional[str] = Query(None, enum=["done", "undone"]),
+    sort_by: str = Query("priority", enum=["priority", "created_at"]),
+    order: str = Query("asc", enum=["asc", "desc"]),
     session: Session = Depends(get_session),
 ):
     repo = TodoRepository(session)
-    return repo.get_all(offset=offset, limit=limit, status=status)
+    return repo.get_all(
+        offset=offset, limit=limit, status=status, sort_by=sort_by, order=order
+    )
 
 
 @app.delete("/todos/{todo_id}")

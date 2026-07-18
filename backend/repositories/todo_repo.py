@@ -1,5 +1,6 @@
 from sqlmodel import Session, select
 from models.todo import Todo
+from sqlalchemy import asc, desc
 
 
 # only for working with SQLAlchemy/SQLModel
@@ -15,13 +16,29 @@ class TodoRepository:
         # true/false
         return result is not None
 
-    def get_all(self, offset: int = 0, limit: int = 50, status: str | None = None):
+    def get_all(
+        self,
+        offset: int = 0,
+        limit: int = 50,
+        status: str | None = None,
+        sort_by: str = "priority",
+        order: str = "asc",
+    ):
         query = select(Todo)
 
         if status:
             # transfer status str -> bool
             is_completed = status == "done"
             query = query.where(Todo.completed == is_completed)
+
+        # sort_by
+        sort_column = getattr(Todo, sort_by)
+
+        # order
+        if order == "desc":
+            query = query.order_by(desc(sort_column))
+        else:
+            query = query.order_by(asc(sort_column))
 
         query = query.offset(offset).limit(limit)
         return self.session.exec(query).all()

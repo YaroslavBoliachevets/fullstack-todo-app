@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
+from datetime import datetime
 
 
 # models only for validation data in/out
@@ -11,6 +12,7 @@ class TodoCreate(BaseModel):
 class TodoRead(TodoCreate):
     id: int
     completed: bool
+    created_at: datetime
 
 
 class TodoUpdate(BaseModel):
