@@ -1,6 +1,6 @@
 'use client';
 
-import { Todo } from '@/hooks/useTodos';
+import { Todo } from '@/types';
 interface TodoItemProps {
   todo: Todo;
   deleteTodo: (deleteId: number) => void;

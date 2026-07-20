@@ -2,17 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/client';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
-
-export interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-  priority: number;
-}
-
-type FilterStatus = 'all' | 'done' | 'undone';
-type FilterSortBy = 'priority' | 'created_at';
-type FilterOrder = 'asc' | 'desc';
+import { Todo, FilterStatus, FilterSortBy, FilterOrder } from '@/types';
 
 export function useTodos() {
   const searchParams = useSearchParams();

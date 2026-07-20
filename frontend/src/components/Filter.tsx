@@ -1,6 +1,6 @@
 'use client';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { FilterStatus } from '@/hooks/useTodos';
+import { FilterStatus } from '@/types';
 
 export const Filter = () => {
   const router = useRouter();
