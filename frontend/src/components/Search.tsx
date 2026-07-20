@@ -6,29 +6,23 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 
-interface SearchProps {
-  onSearch: (value: string) => void;
-  placeholder?: string;
-}
-
 export const Search = () => {
-  //   const debouncedText = useDebounce(text, 400);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
   const [text, setText] = useState(searchParams.get('search')?.toString() || '');
+  const debouncedText = useDebounce(text, 400);
 
-  //   useEffect(() => {
-  //     onSearch(debouncedText);
-  //   }, [debouncedText, onSearch]);
-
-  const handleSearchChange = (key: 'search', value: string) => {
-    setText(value);
+  useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set(key, value);
+    if (debouncedText.trim()) {
+      params.set('search', debouncedText.trim());
+    } else {
+      params.delete('search');
+    }
     replace(`${pathname}?${params.toString()}`);
-  };
+  }, [debouncedText, pathname, replace]);
 
   return (
     <div className="relative w-full">
@@ -38,7 +32,7 @@ export const Search = () => {
       <input
         type="text"
         value={text}
-        onChange={(e) => handleSearchChange('search', e.target.value)}
+        onChange={(e) => setText(e.target.value)}
         placeholder={'search tasks'}
         className="w-full pl-9 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all"
       />
