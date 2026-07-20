@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, col
 from models.todo import Todo
 from sqlalchemy import asc, desc
 
@@ -23,6 +23,7 @@ class TodoRepository:
         status: str | None = None,
         sort_by: str = "priority",
         order: str = "asc",
+        search: str | None = None,
     ):
         query = select(Todo)
 
@@ -30,6 +31,9 @@ class TodoRepository:
             # transfer status str -> bool
             is_completed = status == "done"
             query = query.where(Todo.completed == is_completed)
+
+        if search:
+            query = query.where(col(Todo.title).ilike(f"%{search}%"))
 
         # sort_by
         sort_column = getattr(Todo, sort_by)

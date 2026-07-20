@@ -39,10 +39,16 @@ def get_todos(
     sort_by: str = Query("priority", enum=["priority", "created_at"]),
     order: str = Query("asc", enum=["asc", "desc"]),
     session: Session = Depends(get_session),
+    search: str | None = None,
 ):
     repo = TodoRepository(session)
     return repo.get_all(
-        offset=offset, limit=limit, status=status, sort_by=sort_by, order=order
+        offset=offset,
+        limit=limit,
+        status=status,
+        sort_by=sort_by,
+        order=order,
+        search=search,
     )
 
 
