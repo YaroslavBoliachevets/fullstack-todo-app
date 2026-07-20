@@ -20,6 +20,7 @@ export function useTodos() {
   const filterStatus = (searchParams.get('status') as FilterStatus) || 'all';
   const filterSortBy = (searchParams.get('sort_by') as FilterSortBy) || 'priority';
   const filterOrder = (searchParams.get('order') as FilterOrder) || 'asc';
+  const filterSearch = (searchParams.get('search') as string) || '';
 
   // for invalidate data
   const queryClient = useQueryClient();
@@ -28,13 +29,14 @@ export function useTodos() {
     const params = new URLSearchParams();
 
     if (filterStatus !== 'all') params.set('status', filterStatus);
+    if (filterSearch) params.set('search', filterSearch);
     params.set('sort_by', filterSortBy);
     params.set('order', filterOrder);
     return `/todos?${params.toString()}`;
   };
 
   const todosQuery = useQuery<Todo[]>({
-    queryKey: ['todos', filterStatus, filterSortBy, filterOrder],
+    queryKey: ['todos', filterStatus, filterSortBy, filterOrder, filterSearch],
     queryFn: () => api.get<Todo[]>(buildUrl()),
   });
 
@@ -50,8 +52,8 @@ export function useTodos() {
     mutationFn: ({ id, completed }: { id: number; completed: boolean }) =>
       api.patch(`/todos/${id}`, { completed }),
     onSuccess: () => {
-      (queryClient.invalidateQueries({ queryKey: ['todos'] }),
-        toast.success('Task update successfully'));
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+      toast.success('Task update successfully');
     },
   });
 
