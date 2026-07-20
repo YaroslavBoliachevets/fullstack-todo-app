@@ -49,7 +49,10 @@ export function useTodos() {
   const toggleMutation = useMutation({
     mutationFn: ({ id, completed }: { id: number; completed: boolean }) =>
       api.patch(`/todos/${id}`, { completed }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['todos'] }),
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ['todos'] }),
+        toast.success('Task update successfully'));
+    },
   });
 
   return {
@@ -57,9 +60,13 @@ export function useTodos() {
     isLoading: todosQuery.isLoading,
     isError: todosQuery.isError,
     error: todosQuery.error,
+
     deleteTodo: deleteMutation.mutate,
     isDeleting: deleteMutation.isPending,
+    deleteVariables: deleteMutation.variables, // current delete id
+
     toggleTodo: toggleMutation.mutate,
     isToggling: toggleMutation.isPending,
+    toggleVariables: toggleMutation.variables, // obj args
   };
 }
