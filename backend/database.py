@@ -8,7 +8,12 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # create engine to connect to PostgreSQL
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(
+    DATABASE_URL,
+    echo=True,
+    pool_pre_ping=True,  # check connection before send query
+    pool_recycle=300,
+)  # recreacte connetcion every 300s
 
 
 # init tables in Postgres

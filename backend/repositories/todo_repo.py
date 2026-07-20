@@ -36,9 +36,9 @@ class TodoRepository:
 
         # order
         if order == "desc":
-            query = query.order_by(desc(sort_column))
+            query = query.order_by(desc(sort_column), desc(Todo.created_at))
         else:
-            query = query.order_by(asc(sort_column))
+            query = query.order_by(asc(sort_column), asc(Todo.created_at))
 
         query = query.offset(offset).limit(limit)
         return self.session.exec(query).all()
