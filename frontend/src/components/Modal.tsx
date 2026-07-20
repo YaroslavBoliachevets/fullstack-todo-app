@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useModal } from '@/hooks/useModal';
 import { ReactNode } from 'react';
 
 interface ModalProps {
@@ -9,24 +9,7 @@ interface ModalProps {
 }
 
 export function Modal({ children, title = 'Header' }: ModalProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-
-  const isOpen = searchParams.get('modal') === 'true';
-
-  const openModal = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('modal', 'true');
-
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
-  const closeModal = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete('modal');
-    router.replace(`${pathname}?${params.toString()}`);
-  };
+  const { isOpen, closeModal } = useModal();
 
   if (!isOpen) return null;
 
