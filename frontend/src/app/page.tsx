@@ -4,17 +4,22 @@ import { TodoList } from '@/components/TodoList';
 import { Filter } from '@/components/Filter';
 import { Sort } from '@/components/Sort';
 import { Search } from '@/components/Search';
+import { Modal } from '@/components/Modal';
+import { Header } from '@/components/Header';
 
 export default function Home() {
   return (
     <>
       {/* prevent error on next build stage */}
       <Suspense fallback={<div>Loading navigation...</div>}>
-        <TodoForm />
+        <Header />
         <Search />
         <Filter />
         <Sort />
         <TodoList />
+        <Modal title={'create task'}>
+          <TodoForm />
+        </Modal>
       </Suspense>
     </>
   );
