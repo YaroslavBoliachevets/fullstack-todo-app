@@ -10,7 +10,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Адрес твоего фронтенда
+    allow_origins=[
+        "http://localhost:3000",
+        "https://fullstack-todo-app-5sju.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],  # Разрешить все методы (GET, POST, DELETE и т.д.)
     allow_headers=["*"],  # Разрешить все заголовки

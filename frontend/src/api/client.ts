@@ -1,5 +1,4 @@
-// const BASE_URL = process.env.NEXT_PUBLIC_URL || 'http://localhost:5000/api';
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = process.env.NEXT_PUBLIC_URL || 'http://127.0.0.1:8000';
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
