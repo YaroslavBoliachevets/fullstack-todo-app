@@ -6,6 +6,10 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { SearchIcon, X } from 'lucide-react';
+
 export const Search = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -21,29 +25,28 @@ export const Search = () => {
     } else {
       params.delete('search');
     }
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [debouncedText, pathname, replace]);
 
   return (
     <div className="relative w-full">
-      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-        🔍
-      </div>
-      <input
+      <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"></SearchIcon>
+      <Input
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder={'search tasks'}
-        className="w-full pl-9 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all"
+        placeholder={'Search tasks...'}
+        className="pl-9 pr-9 h-10 w-full"
       />
       {text && (
-        <button
-          onClick={() => setText('')}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 text-xs font-bold"
+        <Button
           type="button"
+          variant="ghost"
+          onClick={() => setText('')}
+          className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground"
         >
-          ✕
-        </button>
+          <X className="h-4 w-4" />
+        </Button>
       )}
     </div>
   );

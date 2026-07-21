@@ -1,6 +1,13 @@
 'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export const Sort = () => {
   const router = useRouter();
@@ -18,32 +25,27 @@ export const Sort = () => {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 p-3 mb-4 bg-gray-50 rounded-lg border border-gray-200">
-      {/* Выбор поля сортировки */}
-      <div className="flex items-center gap-2">
-        <label className="text-sm font-medium text-gray-600">Сортировка:</label>
-        <select
-          value={currentSortBy}
-          onChange={(e) => handleSortChange('sort_by', e.target.value)}
-          className="p-1.5 text-sm bg-white border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
-        >
-          <option value="priority">По приоритету</option>
-          <option value="created_at">По дате создания</option>
-        </select>
-      </div>
+    <div className="flex items-center gap-2">
+      <Select value={currentSortBy} onValueChange={(value) => handleSortChange('sort_by', value)}>
+        <SelectTrigger className="w-[150px] h-9 text-xs">
+          <SelectValue placeholder="Сортировка" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="priority">By Priority</SelectItem>
+          <SelectItem value="created_at">By Date</SelectItem>
+          <SelectItem value="title">By Title</SelectItem>
+        </SelectContent>
+      </Select>
 
-      {/* Выбор направления */}
-      <div className="flex items-center gap-2">
-        <label className="text-sm font-medium text-gray-600">Порядок:</label>
-        <select
-          value={currentOrder}
-          onChange={(e) => handleSortChange('order', e.target.value)}
-          className="p-1.5 text-sm bg-white border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
-        >
-          <option value="asc">Возрастание (1 → 10 / Сначала старые)</option>
-          <option value="desc">Убывание (10 → 1 / Сначала новые)</option>
-        </select>
-      </div>
+      <Select value={currentOrder} onValueChange={(value) => handleSortChange('order', value)}>
+        <SelectTrigger className="w-[140px] h-9 text-xs">
+          <SelectValue placeholder="Порядок" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="asc">Ascending</SelectItem>
+          <SelectItem value="desc">Descending</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 };

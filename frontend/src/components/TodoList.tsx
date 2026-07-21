@@ -39,7 +39,6 @@ export const TodoList = () => {
 
   return (
     <div>
-      <h3>list</h3>
       <ul className="grid gap-2">
         {todos.map((todo) => {
           return (

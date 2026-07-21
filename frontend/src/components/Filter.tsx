@@ -2,13 +2,21 @@
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { FilterStatus } from '@/types';
 
+import { Button } from '@/components/ui/button';
+
 export const Filter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const activeFilter = (searchParams.get('status') as FilterStatus) || 'all';
-  const statuses: FilterStatus[] = ['all', 'done', 'undone'];
+  // const statuses: FilterStatus[] = ['all', 'done', 'undone'];
+
+  const statuses: { label: string; value: FilterStatus }[] = [
+    { label: 'All', value: 'all' },
+    { label: 'In progress', value: 'undone' },
+    { label: 'Ready', value: 'done' },
+  ];
 
   const handleFilterChange = (status: FilterStatus) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -20,26 +28,27 @@ export const Filter = () => {
     }
 
     // _rsc - service tail in the end
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (
     <ul className="flex gap-3">
-      {statuses.map((status) => (
-        <li key={status}>
-          <button
-            disabled={activeFilter === status}
-            onClick={() => handleFilterChange(status)}
-            className={`px-4 py-2 border rounded cursor-pointer transition-all ${
-              activeFilter === status
-                ? 'bg-blue-500 text-white border-blue-500 disabled:opacity-100'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {status === 'all' ? 'All' : status === 'done' ? 'Done' : 'Undone'}
-          </button>
-        </li>
-      ))}
+      {statuses.map((status) => {
+        const isActive = activeFilter === status.value;
+        return (
+          <li key={status.value}>
+            <Button
+              key={status.value}
+              size="sm"
+              variant={isActive ? 'default' : 'outline'}
+              onClick={() => handleFilterChange(status.value)}
+              className="h-9 px-3 text-xs"
+            >
+              {status.label}
+            </Button>
+          </li>
+        );
+      })}
     </ul>
   );
 };
