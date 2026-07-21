@@ -2,6 +2,9 @@
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+
 useRouter;
 
 export const Header = () => {
@@ -15,12 +18,16 @@ export const Header = () => {
     router.push(`${pathname}?${params.toString()}`);
   };
   return (
-    <button
-      onClick={openModal}
-      className="flex items-center justify-center 
-    max-w-[90px] h-[42px] cursor-pointer px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm transition-colors active:scale-95 disabled:bg-slate-300 disabled:cursor-default"
-    >
-      ++ Add task
-    </button>
+    <header className="flex items-center justify-between pb-6 mb-6 border-b">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">My Tasks</h1>
+        <p className="text-sm text-muted-foreground">Manage and track your daily tasks</p>
+      </div>
+
+      <Button onClick={openModal} className="gap-2">
+        <Plus className="h-4 w-4" />
+        <span>Add Task</span>
+      </Button>
+    </header>
   );
 };
