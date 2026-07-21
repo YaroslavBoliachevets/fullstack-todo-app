@@ -49,3 +49,21 @@ Filtering: Filter tasks by their current status (All, In progress, Ready).
 Sorting: Sort tasks by priority, date, or title in ascending or descending order.
 
 Task Management: Toggle task completion status or delete tasks directly from the interface.
+
+## 🧪 Testing
+
+Run the backend test suite using `pytest`:
+
+1. **Navigate to the backend directory:**
+   cd backend
+
+2. **Activate the virtual environment:**
+   ```bash
+   # Windows (PowerShell)
+   venv\Scripts\Activate.ps1
+
+   # macOS / Linux
+   source venv/bin/activate
+   ```
+   Run pytest:
+   pytest -v
