@@ -26,9 +26,10 @@ frontend/ — Next.js pages, components, and state management using React Query.
    npm run install:all
 
 3. **Configure environment variables:**
-   Create a .env file inside the backend/ directory and specify your database
-   connection string:
+   Create a .env file inside the backend/ directory and specify your database and CORS
+   connection strings:
    DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+   ALLOWED_ORIGINS=http://localhost:3000,https://your-project-name.vercel.app
 
 ## 🚀 Running the Application
 

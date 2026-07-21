@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlmodel import Session
 from database import get_session
@@ -8,12 +9,11 @@ from typing import Optional
 
 app = FastAPI()
 
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://fullstack-todo-app-5sju.vercel.app",
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],  # Разрешить все методы (GET, POST, DELETE и т.д.)
     allow_headers=["*"],  # Разрешить все заголовки
@@ -62,7 +62,7 @@ def del_todos(todo_id: int, session: Session = Depends(get_session)):
 
     # if false than
     if not repo.delete(todo_id):
-        raise HTTPException(status_code=404, detail="Task has not found")
+        raise HTTPException(status_code=404, detail="Task not found")
 
     return {"message": "Task deleted"}
 
