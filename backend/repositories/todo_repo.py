@@ -36,7 +36,10 @@ class TodoRepository:
             query = query.where(col(Todo.title).ilike(f"%{search}%"))
 
         # sort_by
-        sort_column = getattr(Todo, sort_by)
+        if hasattr(Todo, sort_by):
+            sort_column = getattr(Todo, sort_by)
+        else:
+            sort_column = Todo.created_at
 
         # order
         if order == "desc":
