@@ -8,7 +8,7 @@ export default function TotoFilterSection() {
       <div className="flex-1 min-w-[200px]">
         <Search />
       </div>
-      <div className="flex flex-wrap items-center gap-2 grow md:grow-0 justify-between md:justify-end">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
         <Filter />
         <Sort />
       </div>
