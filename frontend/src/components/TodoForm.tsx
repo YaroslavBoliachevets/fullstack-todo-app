@@ -3,15 +3,14 @@ import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { CreateTodoInput } from '@/types';
 import { useModal } from '@/hooks/useModal';
 
-interface Todo {
-  title: string;
-  completed?: boolean;
-  description?: string;
-  priority: number;
-}
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Slider } from '@/components/ui/slider';
+import { Loader2 } from 'lucide-react';
 
 export const TodoForm = () => {
   const { closeModal } = useModal('modal');
@@ -21,7 +20,7 @@ export const TodoForm = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (newTodo: Todo) => api.post('/todos', newTodo),
+    mutationFn: (newTodo: CreateTodoInput) => api.post('/todos', newTodo),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] });
       setTitle('');
@@ -46,57 +45,52 @@ export const TodoForm = () => {
     <form className=" max-w-md" onSubmit={handleSubmit}>
       {/* Title */}
       <div className="mb-3">
-        <label className="block text-xs font-medium text-slate-600 mb-1">
-          Title <span className="text-red-500">*</span>
+        <label className="text-xs font-medium text-slate-300">
+          Title <span className="text-red-400">*</span>
         </label>
-        <input
+        <Input
           type="text"
           placeholder="What needs to be done?"
           onChange={(e) => setTitle(e.target.value)}
           value={title}
           disabled={mutation.isPending}
-          className="w-full px-3.5 py-2 rounded-lg border border-slate-200 bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-sm disabled:bg-slate-50"
         />
       </div>
 
       {/* Description */}
       <div className="mb-3">
-        <label className="block text-xs font-medium text-slate-600 mb-1">
-          Description (optional)
-        </label>
-        <textarea
+        <label className="text-xs font-medium text-slate-300">Description (optional)</label>
+        <Textarea
           rows={3}
           placeholder="Add more details..."
           onChange={(e) => setDescription(e.target.value)}
           value={description}
           disabled={mutation.isPending}
-          className="w-full px-3.5 py-2 rounded-lg border border-slate-200 bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-sm resize-none disabled:bg-slate-50"
+          className="resize-none"
         />
       </div>
 
       {/* Priority Slider (1 - 10) */}
       <div>
         <div className="flex justify-between items-center mb-1.5">
-          <label className="text-xs font-medium text-slate-600">Priority</label>
+          <label className="text-xs font-medium text-slate-300">Priority</label>
           {/* Badge */}
-          <span className="px-2 py-0.5 text-xs font-semibold bg-indigo-50 text-indigo-600 rounded-md border border-indigo-100">
+          <span className="px-2 py-0.5 text-xs font-semibold bg-indigo-500/10 text-indigo-400 rounded-md border border-indigo-500/20">
             {priority} / 10
           </span>
         </div>
 
-        <input
-          type="range"
+        <Slider
+          value={[priority]}
           min={1}
           max={10}
           step={1}
-          value={priority}
-          onChange={(e) => setPriority(Number(e.target.value))}
+          onValueChange={(val) => setPriority(val[0])}
           disabled={mutation.isPending}
-          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 disabled:opacity-50"
         />
 
         {/* Marks under Slider*/}
-        <div className="flex justify-between text-[10px] text-slate-400 mt-1 px-0.5">
+        <div className="flex justify-between text-[10px] text-slate-400 px-0.5">
           <span>1 (Low)</span>
           <span>5 (Medium)</span>
           <span>10 (High)</span>
@@ -105,22 +99,13 @@ export const TodoForm = () => {
 
       {/* Actions */}
       <div className="flex justify-end gap-2 mt-2">
-        <button
-          type="button"
-          onClick={closeModal}
-          disabled={mutation.isPending}
-          className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg text-sm transition-colors cursor-pointer"
-        >
+        <Button type="button" onClick={closeModal} disabled={mutation.isPending}>
           Cancel
-        </button>
+        </Button>
 
-        <button
-          type="submit"
-          disabled={mutation.isPending || !title.trim()}
-          className="flex items-center justify-center min-w-[100px] h-[38px] cursor-pointer px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm transition-colors active:scale-95 disabled:bg-slate-300 disabled:cursor-not-allowed"
-        >
+        <Button type="submit" disabled={mutation.isPending || !title.trim()}>
           {mutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create Task'}
-        </button>
+        </Button>
       </div>
     </form>
   );

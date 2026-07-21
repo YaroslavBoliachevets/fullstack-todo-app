@@ -1,6 +1,13 @@
 'use client';
 
 import { Todo } from '@/types';
+
+import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Trash2, Loader2 } from 'lucide-react';
+
 interface TodoItemProps {
   todo: Todo;
   deleteTodo: (deleteId: number) => void;
@@ -25,44 +32,60 @@ export const TodoItem = ({
   const isCurrentDeleting = isDeleting && deleteVariables === todo.id;
   const isDisabled = isCurrentToggling || isCurrentDeleting;
 
+  const getPriorityBadgeVariant = (priority: number) => {
+    if (priority >= 8) return 'destructive';
+    if (priority >= 5) return 'secondary';
+    return 'outline';
+  };
+
   return (
-    <li
-      className={`flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-white shadow-sm transition-opacity ${
-        isCurrentDeleting ? 'opacity-40' : 'opacity-100'
-      }`}
-    >
-      <div className="flex items-center gap-3 w-full">
-        {/* Семантическая связка через label для a11y */}
-        <input
-          id={`todo-${todo.id}`}
-          type="checkbox"
-          checked={todo.completed}
-          disabled={isDisabled}
-          onChange={(e) => toggleTodo({ id: todo.id, completed: e.target.checked })}
-          className="w-4 h-4 cursor-pointer accent-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
-        />
+    <Card className="transition-all hover:shadow-md">
+      <CardContent className="p-4 flex items-center justify-between gap-4">
+        <div className="flex items-start gap-3 min-w-0 grow">
+          {/* Семантическая связка через label для a11y */}
+          <Checkbox
+            id={`todo-${todo.id}`}
+            // type="checkbox"
+            checked={todo.completed}
+            disabled={isDisabled}
+            onCheckedChange={(checked) => toggleTodo({ id: todo.id, completed: Boolean(checked) })}
+            className="mt-1"
+          />
+          <div className="flex flex-col min-w-0 grow gap-1">
+            <label
+              htmlFor={`todo-${todo.id}`}
+              className={`font-medium leading-none cursor-pointer select-none truncate ${
+                todo.completed ? 'line-through text-muted-foreground' : 'text-foreground'
+              }`}
+            >
+              {todo.title}
+            </label>
 
-        <label
-          htmlFor={`todo-${todo.id}`}
-          className={`font-medium cursor-pointer select-none grow ${
-            todo.completed ? 'line-through text-gray-400' : 'text-gray-800'
-          }`}
-        >
-          {todo.title}
-        </label>
+            {todo.description && (
+              <p className="text-xs text-muted-foreground line-clamp-2 break-words">
+                {todo.description}
+              </p>
+            )}
+          </div>
+        </div>
 
-        <span className="text-xs bg-gray-100 px-2 py-1 rounded font-semibold text-gray-600 shrink-0">
-          Priority: {todo.priority}
-        </span>
-      </div>
-
-      <button
-        onClick={() => deleteTodo(todo.id)}
-        disabled={isDisabled}
-        className="ml-4 cursor-pointer px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-      >
-        {isCurrentDeleting ? 'Deleting...' : 'Delete'}
-      </button>
-    </li>
+        <div className="flex items-center gap-3 shrink-0">
+          <Badge variant={getPriorityBadgeVariant(todo.priority)}>Priority: {todo.priority}</Badge>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => deleteTodo(todo.id)}
+            disabled={isDisabled}
+            className="text-muted-foreground hover:text-destructive transition-colors h-8 w-8"
+          >
+            {isCurrentDeleting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Trash2 className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

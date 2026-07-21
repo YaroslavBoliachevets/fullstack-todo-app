@@ -22,7 +22,6 @@ app.add_middleware(
 
 @app.post("/todos", response_model=TodoRead)
 def create_todo(todo_in: TodoCreate, session: Session = Depends(get_session)):
-    print("RECEIVED DATA:", todo_in.model_dump())
     repo = TodoRepository(session)
 
     # check same title
