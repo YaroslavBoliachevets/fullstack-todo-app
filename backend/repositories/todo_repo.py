@@ -11,10 +11,14 @@ class TodoRepository:
 
     def exists_by_title(self, title: str) -> bool:
         # looking for todo with the same title  // STATMENT = SQL QUERY
-        statment = select(Todo).where(Todo.title == title)
+        statment = select(Todo).where(col(Todo.title).ilike(title))
         result = self.session.exec(statment).first()
         # true/false
         return result is not None
+
+    def get_by_title(self, title: str) -> Todo | None:
+        statment = select(Todo).where(col(Todo.title).ilike(title))
+        return self.session.exec(statment).first()
 
     def get_all(
         self,

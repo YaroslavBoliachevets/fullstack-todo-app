@@ -78,6 +78,13 @@ def update_todo(
     if not payload:
         raise HTTPException(status_code=400, detail="No data provided for update")
 
+    if "title" in payload:
+        existing_todo = repo.get_by_title(payload["title"])
+        if existing_todo and existing_todo.id != todo_id:
+            raise HTTPException(
+                status_code=400, detail="Task with this title already exists"
+            )
+
     update_todo = repo.update(todo_id, payload)
     if not update_todo:
         raise HTTPException(status_code=404, detail="Task has not found")

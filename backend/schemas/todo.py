@@ -18,7 +18,11 @@ class TodoRead(TodoCreate):
 
 
 class TodoUpdate(BaseModel):
-    title: Optional[str] = None
-    priority: Optional[int] = None
+    title: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    priority: Optional[int] = Field(default=None, ge=1, le=10)
     completed: Optional[bool] = None
-    description: Optional[str] = None
+    description: Optional[str] = Field(default=None, max_length=200)
+
+    # запрещает кидать лишние поля
+    class Config:
+        extra = "forbid"
